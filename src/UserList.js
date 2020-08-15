@@ -1,40 +1,51 @@
-import React from "react"
+import React, { useContext } from "react"
+import { UserDispatch } from "./App"
 
-function User({ user }) {
+const User = React.memo(function User({ user }) {
+  const { username, email, id, active } = user
+  const dispatch = useContext(UserDispatch)
+
   return (
     <div>
-      <b>{user.username}</b><span>({user.email})</span>
+      <b 
+        style={{
+          color: active ? "green" : "black",
+          cursor: "pointer"
+        }}
+        onClick={() => dispatch({
+            type: "TOGGLE_USER",
+            id
+        })}
+      >
+        {username}
+      </b>
+      &nbsp;
+      <span>({email})</span>
+      <button onClick={() => dispatch({
+          type: "REMOVE_USER",
+          id
+      })}>삭제</button>
     </div>
   )
-}
+})
 
-function UserList() {
-  const users = [
-    {
-      id: 1,
-      username: "aaa",
-      email: "asdf@naver.com"
-    },
-    {
-      id: 2,
-      username: "bbb",
-      email: "bbbb@naver.com"
-    },
-    {
-      id: 3,
-      username: "ccc",
-      email: "cccc@naver.com"
-    }
-  ]
+function UserList({ users }) {
   return (
     <div>
       {
         users.map(
-          user => (<User user={user} key={user.id}/>)
+          (user, index) => (
+            <User
+              user={user}
+              key={user.id}
+            />
+          )
         )
       }
     </div>
   )
 }
 
-export default UserList
+export default React.memo(UserList, (prevProps, nextProps) => 
+  nextProps.users === prevProps.users
+) // 두 번째 인자는 조심해서 사용
