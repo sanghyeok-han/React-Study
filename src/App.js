@@ -1,11 +1,10 @@
-import React, { useReducer, useMemo, createContext } from 'react';
-import produce from 'immer'
-import UserList from './UserList';
-import CreateUser from './CreateUser';
-
+import React, { useReducer, useMemo, createContext } from "react"
+import produce from "immer"
+import UserList from "./UserList"
+import CreateUser from "./CreateUser"
 
 function countActiveUsers(users) {
-  return users.filter(uesr => uesr.active).length
+  return users.filter((uesr) => uesr.active).length
 }
 
 const initialState = {
@@ -14,40 +13,39 @@ const initialState = {
       id: 1,
       username: "aaa",
       email: "asdf@naver.com",
-      active: true
+      active: true,
     },
     {
       id: 2,
       username: "bbb",
       email: "bbbb@naver.com",
-      active: false
+      active: false,
     },
     {
       id: 3,
       username: "ccc",
       email: "cccc@naver.com",
-      active: false
-    }
-  ]
+      active: false,
+    },
+  ],
 }
 
 function reducer(state, action) {
   switch (action.type) {
-    case 'CREATE_USER':
+    case "CREATE_USER":
       return {
-        users: state.users.concat(action.user)
+        users: state.users.concat(action.user),
       }
 
-    case 'TOGGLE_USER':
-      return produce(state, draft => {
-        const user = draft.users.find(user => user.id === action.id)
+    case "TOGGLE_USER":
+      return produce(state, (draft) => {
+        const user = draft.users.find((user) => user.id === action.id)
         user.active = !user.active
       })
 
-    case 'REMOVE_USER':
+    case "REMOVE_USER":
       return {
-        users: state.users.filter(user =>
-          user.id !== action.id)
+        users: state.users.filter((user) => user.id !== action.id),
       }
 
     default:
@@ -66,13 +64,10 @@ function App() {
   return (
     <UserDispatch.Provider value={dispatch}>
       <CreateUser />
-      <UserList
-        users={users}
-      />
+      <UserList users={users} />
       <div>활성 사용자 수: {count}</div>
     </UserDispatch.Provider>
   )
 }
 
-
-export default App;
+export default App
